@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Popover from 'react-popover';
 import * as moment from 'moment';
 import './PopoverForCreateEvent.css';
+import store from '../store';
+import { addEvent, deleteEvent } from '../actions/';
 
 class PopoverForCreateEvent extends Component {
     constructor(props) {
@@ -42,6 +44,10 @@ class PopoverForCreateEvent extends Component {
         });
     }
 
+    deleteEvent() {
+        store.dispatch(deleteEvent([this.props.event]));
+    }
+
     handleSubmit(e) {
         let event = {
             id: new Date().getTime(),
@@ -50,10 +56,7 @@ class PopoverForCreateEvent extends Component {
             assigns: this.state.assigns,
             description: this.state.description
         };
-        let allEvents = JSON.parse(localStorage.getItem('events') || '[]');
-        allEvents.push(event);
-        localStorage.setItem('events', JSON.stringify(allEvents));
-        this.props.addevent(event);
+        store.dispatch(addEvent([event]));
         this.handleClose(false);
         e.preventDefault();
     }
@@ -77,7 +80,7 @@ class PopoverForCreateEvent extends Component {
                         <textarea disabled value={this.props.event.description} name="description" className="form-control" cols="30" rows="5" placeholder="Описание"/>
                         <div className="buttons">
                             <button onClick={() => this.props.gotolist ? this.props.gotolist() : this.handleClose(false)}>Готово</button>
-                            <button onClick={() => this.props.deleteevent(this.props.event)}>Удалить</button>
+                            <button onClick={this.deleteEvent.bind(this)}>Удалить</button>
                         </div>
                     </div>
                     :
@@ -88,7 +91,6 @@ class PopoverForCreateEvent extends Component {
                     <textarea value={this.state.description} name="description" onChange={this.handleInputChange.bind(this)} className="form-control" cols="30" rows="5" placeholder="Описание"/>
                     <div className="buttons">
                         <button>Готово</button>
-                        <button>Удалить</button>
                     </div>
                 </form>
             ]
@@ -114,7 +116,7 @@ class PopoverForCreateEvent extends Component {
                     <textarea disabled value={this.props.event.description} name="description" className="form-control" cols="30" rows="5" placeholder="Описание"/>
                     <div className="buttons">
                         <button onClick={() => this.props.gotolist()}>Готово</button>
-                        <button onClick={() => this.props.deleteevent(this.props.event)}>Удалить</button>
+                        <button onClick={() => {this.props.gotolist();this.deleteEvent()}}>Удалить</button>
                     </div>
                 </div>
 

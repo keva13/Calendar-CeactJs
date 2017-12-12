@@ -3,6 +3,8 @@ import Day from './Day';
 import Search from './Search';
 import './App.css';
 import * as moment from 'moment';
+import store from '../store';
+import { addEvent } from '../actions/';
 
 class App extends Component {
 
@@ -34,6 +36,8 @@ class App extends Component {
 
     componentWillMount() {
         this.getCalendar();
+        let allEvents = JSON.parse(localStorage.getItem('events') || '[]');
+        store.dispatch(addEvent(allEvents));
     }
 
     getCalendar()  {

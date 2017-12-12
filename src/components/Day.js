@@ -2,90 +2,56 @@ import React, { Component } from 'react';
 import PopoverForCreateEvent from './PopoverForCreateEvent';
 import MoreEvents from './MoreEvents';
 import './Day.css';
+import { connect } from 'react-redux';
 
 class Day extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            events: []
-        };
-
-    }
-
-    componentDidMount() {
-        this.getEvents()
-    }
-
-    getEvents() {
-        let allEvents = JSON.parse(localStorage.getItem('events') || '[]');
-        let eventForThisDay = allEvents.filter(event => this.props.stringdate === event.date);
-        this.setState(prevState => ({
-            events: eventForThisDay
-        }));
-    }
-
-    addEvent(e) {
-        let events = this.state.events;
-        events.push(e);
-        this.setState(prevState => ({
-            events: events
-        }));
-
-    }
-
-    deleteEvent(e) {
-        let allEvents = JSON.parse(localStorage.getItem('events') || '[]');
-        allEvents.splice(allEvents.findIndex(event => event.id === e.id), 1);
-        localStorage.setItem('events', JSON.stringify(allEvents));
-        let events = this.state.events;
-        events.splice(events.findIndex(event => event.id === e.id), 1);
-        this.setState(prevState => ({
-            events: events
-        }));
-    }
-
     render() {
+        let events = this.props.events.filter(event => this.props.stringdate === event.date);
         let getEvents = () => {
-            if (this.state.events.length === 1) {
+            if (events.length === 1) {
                 return <div className="events">
                     <PopoverForCreateEvent
                         ispopover={true}
                         isdisable={true}
-                        event={this.state.events[0]}
-                        // gotolist={this.goToList.bind(this)}
-                        deleteevent={this.deleteEvent.bind(this)}>
+                        event={events[0]}>
                         <span className="label label-primary event">
-                            {this.state.events[0].eventName}
+                            {events[0].eventName}
                         </span>
                     </PopoverForCreateEvent>
                 </div>
-            } else if (this.state.events.length > 1) {
+            } else if (events.length > 1) {
                 return <div className="events">
                     <PopoverForCreateEvent
                         ispopover={true}
                         isdisable={true}
-                        event={this.state.events[0]}
-                        // gotolist={this.goToList.bind(this)}
-                        deleteevent={this.deleteEvent.bind(this)}>
+                        event={events[0]}>
                         <span className="label label-primary event">
-                            {this.state.events[0].eventName}
+                            {events[0].eventName}
                         </span>
                     </PopoverForCreateEvent>
-                    <MoreEvents deleteevent={this.deleteEvent.bind(this)} events={this.state.events} />
+                    <MoreEvents events={events} />
                 </div>
             }
         };
 
         return (
             <div className={this.props.classname}>
+                {events.length}
                 <div className="header">
                     {this.props.stringforday}
                 </div>
                 {getEvents()}
-                <PopoverForCreateEvent stringdate={this.props.stringdate} addevent={this.addEvent.bind(this)} daykey={this.props.daykey} />
+                <PopoverForCreateEvent stringdate={this.props.stringdate} daykey={this.props.daykey} />
             </div>
         );
     }
 }
 
-export default Day;
+
+const mapEventToProps = function(store) {
+    return {
+        events: store.events
+    };
+};
+
+export default connect(mapEventToProps)(Day);

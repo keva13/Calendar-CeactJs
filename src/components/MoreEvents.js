@@ -9,9 +9,6 @@ class MoreEvents extends Component {
         super(props);
         this.state = {
             open: false,
-            eventName: '',
-            assigns: '',
-            description: '',
             view: 'list',
             event: {}
         };
@@ -30,17 +27,6 @@ class MoreEvents extends Component {
         this.setState({
             open: false,
         });
-        this.handleClear();
-    }
-
-    handleClear() {
-        this.setState({
-            eventName: '',
-            assigns: '',
-            description: '',
-            view: 'list',
-            event: {}
-        });
     }
 
     viewEvent(e) {
@@ -56,11 +42,6 @@ class MoreEvents extends Component {
         });
     }
 
-    deleteEvent() {
-        this.props.deleteevent(this.state.event);
-        this.handleClear();
-    }
-
     render() {
         let arrayForEvents = [];
 
@@ -69,7 +50,7 @@ class MoreEvents extends Component {
                 arrayForEvents.push(<span key={i} onClick={() => this.viewEvent(event)} className="label label-primary event">{event.eventName}</span>)
             });
         } else {
-            arrayForEvents =  <PopoverForCreateEvent ispopover={false} isdisable={true} event={this.state.event} gotolist={this.goToList.bind(this)} deleteevent={this.deleteEvent.bind(this)} />
+            arrayForEvents =  <PopoverForCreateEvent ispopover={false} isdisable={true} event={this.state.event} gotolist={this.goToList.bind(this)} />
         }
 
 
