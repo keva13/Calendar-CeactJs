@@ -34,7 +34,6 @@ class Day extends Component {
     }
 
     deleteEvent(e) {
-        debugger;
         let allEvents = JSON.parse(localStorage.getItem('events') || '[]');
         allEvents.splice(allEvents.findIndex(event => event.id === e.id), 1);
         localStorage.setItem('events', JSON.stringify(allEvents));
