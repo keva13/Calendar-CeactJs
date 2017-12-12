@@ -1,0 +1,21 @@
+.Target-toggle-more-events {
+    padding: 2px 4px;
+    display: block;
+    margin-top: 10px;
+}
+
+.popoverForMoreEvents .Popover-body{
+    padding: 10px;
+}
+.popoverForMoreEvents .event {
+    display: block;
+    margin-top: 5px;
+}
+.label-primary {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 5px;
+    max-width: 18ch;
+    text-overflow: ellipsis;
+}
