@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as moment from 'moment';
+import { connect } from 'react-redux';
 
 class Search extends Component {
 
@@ -7,7 +8,6 @@ class Search extends Component {
         super();
         this.state = {
             popupVisible: false,
-            result: [],
             findText: ''
         };
 
@@ -39,22 +39,16 @@ class Search extends Component {
         this.setState({
             findText: value
         });
-        let allEvents = JSON.parse(localStorage.getItem('events') || '[]');
-        let result = allEvents.filter(event => {
-            if (event.eventName.indexOf(value) !== -1 || event.assigns.indexOf(value) !== -1) {
-                return true
-            }
-        });
-
-        this.setState({
-            result: result
-        });
     }
 
     render() {
-        console.log(this);
-        let renderResult = () => {
-            return this.state.result.map(item => {
+        let result = this.props.events.filter(event => {
+            if (event.eventName.indexOf(this.state.findText) !== -1 || event.assigns.indexOf(this.state.findText) !== -1) {
+                return true
+            }
+        });
+        let renderResult = (result) => {
+            return result.map(item => {
                 return <div key={item.id} className="item">
                     <div className="eventName">
                         {item.eventName}
@@ -72,10 +66,10 @@ class Search extends Component {
                     <span className="glyphicon glyphicon-search" placeholder="Собітие дата или учасник"/>
                 </div>
                 <input className="form-control" onChange={this.find.bind(this)} type="text"/>
-                {this.state.result.length && this.state.popupVisible ?
+                {result.length && this.state.popupVisible ?
                     <div className="custom_popover">
                         <div className="result">
-                            {renderResult()}
+                            {renderResult(result)}
                         </div>
                     </div>
                     : []
@@ -85,4 +79,11 @@ class Search extends Component {
     }
 }
 
-export default Search;
+
+const mapEventToProps = function(store) {
+    return {
+        events: store.events
+    };
+};
+
+export default connect(mapEventToProps)(Search);
